@@ -4038,11 +4038,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\КПІ\\Ворк\\Bogdan4ek\\ТРПЗ\\CiServer\\CiServer.Data\\CiServer.Data.csproj",
+      "projectUniqueName": "C:\\КПІ\\Ворк\\Bogdan4ek\\ТРПЗ\\ci_server\\CiServer.Data\\CiServer.Data.csproj",
       "projectName": "CiServer.Data",
-      "projectPath": "C:\\КПІ\\Ворк\\Bogdan4ek\\ТРПЗ\\CiServer\\CiServer.Data\\CiServer.Data.csproj",
+      "projectPath": "C:\\КПІ\\Ворк\\Bogdan4ek\\ТРПЗ\\ci_server\\CiServer.Data\\CiServer.Data.csproj",
       "packagesPath": "C:\\Users\\38093\\.nuget\\packages\\",
-      "outputPath": "C:\\КПІ\\Ворк\\Bogdan4ek\\ТРПЗ\\CiServer\\CiServer.Data\\obj\\",
+      "outputPath": "C:\\КПІ\\Ворк\\Bogdan4ek\\ТРПЗ\\ci_server\\CiServer.Data\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\38093\\AppData\\Roaming\\NuGet\\NuGet.Config"
@@ -4057,8 +4057,8 @@
         "net9.0": {
           "targetAlias": "net9.0",
           "projectReferences": {
-            "C:\\КПІ\\Ворк\\Bogdan4ek\\ТРПЗ\\CiServer\\CiServer.Core\\CiServer.Core.csproj": {
-              "projectPath": "C:\\КПІ\\Ворк\\Bogdan4ek\\ТРПЗ\\CiServer\\CiServer.Core\\CiServer.Core.csproj"
+            "C:\\КПІ\\Ворк\\Bogdan4ek\\ТРПЗ\\ci_server\\CiServer.Core\\CiServer.Core.csproj": {
+              "projectPath": "C:\\КПІ\\Ворк\\Bogdan4ek\\ТРПЗ\\ci_server\\CiServer.Core\\CiServer.Core.csproj"
             }
           }
         }

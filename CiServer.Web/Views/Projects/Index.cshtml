@@ -10,8 +10,7 @@
             <th>Назва</th>
             <th>Репозиторій</th>
             <th>Дата створення</th>
-            <th>Дії</th>
-        </tr>
+            <th style="width: 250px;">Дії</th> </tr>
     </thead>
     <tbody>
         @foreach (var item in Model)
@@ -21,11 +20,14 @@
                     <a href="/Projects/Details/@item.ProjectId">@item.Name</a>
                 </td>
                 <td><a href="@item.RepoUrl" target="_blank">@item.RepoUrl</a></td>
-                <td>@item.CreatedAt</td>
-                <td>
-                    <form action="/api/TestState" method="get" target="_blank">
-                       <a href="/Projects/StartBuild/@item.ProjectId" class="btn btn-warning btn-sm">Запустити Build</a>
-                    </form>
+                <td>@item.CreatedAt.ToLocalTime()</td> <td>
+                    <div class="d-flex gap-2">
+                         <form action="/Projects/StartBuild/@item.ProjectId" method="get">
+                            <button type="submit" class="btn btn-warning btn-sm">🚀 Build</button>
+                        </form>
+                        
+                        <a href="/Projects/Delete/@item.ProjectId" class="btn btn-danger btn-sm">🗑 Видалити</a>
+                    </div>
                 </td>
             </tr>
         }

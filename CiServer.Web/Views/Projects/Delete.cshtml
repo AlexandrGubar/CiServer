@@ -1,0 +1,40 @@
+@model CiServer.Core.Entities.Project
+
+@{
+    ViewData["Title"] = "Видалити проєкт";
+}
+
+<div class="container mt-5">
+    <div class="alert alert-danger" role="alert">
+        <h4 class="alert-heading">⚠️ Обережно!</h4>
+        <p>Ви збираєтесь видалити проєкт <strong>@Model.Name</strong>.</p>
+        <hr>
+        <p class="mb-0">Ця дія незворотна. Разом із проєктом буде видалено <strong>всі білди, логи та артефакти</strong>.</p>
+    </div>
+
+    <div class="card">
+        <div class="card-body">
+            <h5 class="card-title">Деталі проєкту</h5>
+            <dl class="row">
+                <dt class="col-sm-3">ID</dt>
+                <dd class="col-sm-9">@Model.ProjectId</dd>
+
+                <dt class="col-sm-3">Назва</dt>
+                <dd class="col-sm-9">@Model.Name</dd>
+
+                <dt class="col-sm-3">Репозиторій</dt>
+                <dd class="col-sm-9">@Model.RepoUrl</dd>
+
+                <dt class="col-sm-3">Створено</dt>
+                <dd class="col-sm-9">@Model.CreatedAt</dd>
+            </dl>
+            
+            <form asp-action="Delete" method="post">
+               <input type="hidden" name="projectId" value="@Model.ProjectId" />
+        
+               <button type="submit" class="btn btn-danger">🗑 Так, видалити назавжди</button>
+               <a asp-action="Index" class="btn btn-secondary">Скасувати</a>
+            </form>
+        </div>
+    </div>
+</div>

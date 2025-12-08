@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "KSE4vqZL6kI=",
+  "dgSpecHash": "YQOGPXYJ3fc=",
   "success": true,
-  "projectFilePath": "C:\\КПІ\\Ворк\\Bogdan4ek\\ТРПЗ\\CiServer\\CiServer.Web\\CiServer.Web.csproj",
+  "projectFilePath": "C:\\КПІ\\Ворк\\Bogdan4ek\\ТРПЗ\\ci_server\\CiServer.Web\\CiServer.Web.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\38093\\.nuget\\packages\\azure.core\\1.25.0\\azure.core.1.25.0.nupkg.sha512",
     "C:\\Users\\38093\\.nuget\\packages\\azure.identity\\1.7.0\\azure.identity.1.7.0.nupkg.sha512",

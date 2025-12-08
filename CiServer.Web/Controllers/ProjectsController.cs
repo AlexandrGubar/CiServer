@@ -63,4 +63,37 @@ public class ProjectsController : Controller
         await _context.SaveChangesAsync();
         return RedirectToAction(nameof(Index));
     }
+
+    public async Task<IActionResult> Delete(Guid? id)
+    {
+        if (id == null)
+        {
+            return NotFound();
+        }
+        var project = await _context.Projects
+            .FirstOrDefaultAsync(m => m.ProjectId == id);
+        if (project == null)
+        {
+            return NotFound();
+        }
+        return View(project);
+    }
+
+    [HttpPost, ActionName("Delete")]
+    public async Task<IActionResult> DeleteConfirmed(Guid projectId)
+    {
+        Console.WriteLine($"[DEBUG DELETE] Отримано запит на видалення ID: {projectId}");
+        var project = await _context.Projects.FindAsync(projectId);
+        if (project != null)
+        {
+            _context.Projects.Remove(project);
+            await _context.SaveChangesAsync();
+            Console.WriteLine("[DEBUG DELETE] Проєкт успішно видалено з БД");
+        }
+        else
+        {
+            Console.WriteLine("[DEBUG DELETE] Проєкт не знайдено в БД");
+        }
+        return RedirectToAction(nameof(Index));
+    }
 }
