@@ -21,7 +21,7 @@ public class BuildPipeline
             catch (Exception ex)
             {
                 Console.WriteLine($"!!! Pipeline failed on command {command.GetType().Name}: {ex.Message}");
-                return; 
+                throw; 
             }
         }
         Console.WriteLine(">>> Pipeline finished successfully.");
