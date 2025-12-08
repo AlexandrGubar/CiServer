@@ -1,0 +1,51 @@
+@model CiServer.Core.Entities.Project
+@{ ViewData["Title"] = "Деталі проєкту"; }
+
+<div class="container">
+    <h1>@Model.Name</h1>
+    <p class="text-muted">Repo: <a href="@Model.RepoUrl" target="_blank">@Model.RepoUrl</a></p>
+
+    <div class="mb-4">
+        <a asp-action="StartBuild" asp-route-id="@Model.ProjectId" class="btn btn-success btn-lg">🚀 Запустити Build</a>
+        <a asp-action="Index" class="btn btn-secondary">← Назад</a>
+        <a href="/Reports/Project/@Model.ProjectId" target="_blank" class="btn btn-info">📊 Відкрити повний HTML-звіт</a>
+    </div>
+
+    <h3>Історія збірок</h3>
+    <table class="table table-hover">
+        <thead>
+            <tr>
+                <th>Дата</th>
+                <th>Статус</th>
+                <th>Commit</th>
+                <th>Дії</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var build in Model.Builds.OrderByDescending(b => b.StartTime))
+            {
+                string badgeClass = build.Status.ToString() switch
+                {
+                    "Success" => "bg-success",
+                    "Failed" => "bg-danger",
+                    "Running" => "bg-warning text-dark",
+                    _ => "bg-secondary"
+                };
+                <tr>
+                    <td>@build.StartTime.ToLocalTime()</td>
+                    <td><span class="badge @badgeClass">@build.Status</span></td>
+                    <td>@(string.IsNullOrEmpty(build.CommitHash) ? "-" : build.CommitHash)</td>
+                    <td>
+                        <a asp-action="BuildDetails" asp-route-id="@build.BuildId" class="btn btn-sm btn-outline-primary">Деталі</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+<script>
+    setTimeout(function() {
+        window.location.reload(1);
+    }, 30000);
+</script>

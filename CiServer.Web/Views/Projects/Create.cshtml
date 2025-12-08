@@ -1,0 +1,23 @@
+@model CiServer.Core.Entities.Project
+@{ ViewData["Title"] = "Створити проєкт"; }
+
+<h2>Додати новий проєкт</h2>
+
+<div class="row">
+    <div class="col-md-6">
+        <form asp-action="Create" method="post">
+            <div class="mb-3">
+                <label class="form-label">Назва проєкту</label>
+                <input type="text" name="Name" class="form-control" required />
+            </div>
+            
+            <div class="mb-3">
+                <label class="form-label">URL Репозиторію</label>
+                <input type="url" name="RepoUrl" class="form-control" required />
+            </div>
+
+            <button type="submit" class="btn btn-success">Зберегти</button>
+            <a href="/Projects" class="btn btn-secondary">Назад</a>
+        </form>
+    </div>
+</div>
