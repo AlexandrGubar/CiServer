@@ -7,4 +7,5 @@ public interface IVisitor
     void VisitProject(Project project);
     void VisitBuild(Build build);
     void VisitBuildLog(BuildLog log);
+    void VisitArtifact(Artifact artifact);
 }

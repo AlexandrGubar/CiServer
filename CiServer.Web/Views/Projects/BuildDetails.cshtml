@@ -1,0 +1,101 @@
+@model CiServer.Core.Entities.Build
+
+@{
+    ViewData["Title"] = "Деталі збірки";
+    // Визначаємо колір статусу
+    string statusClass = Model.Status.ToString() switch {
+        "Success" => "alert-success",
+        "Failed" => "alert-danger",
+        "Running" => "alert-warning",
+        _ => "alert-secondary"
+    };
+}
+
+<div class="container">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h2>Build Details</h2>
+        <a asp-action="Details" asp-route-id="@Model.ProjectId" class="btn btn-outline-secondary">← Назад до проєкту</a>
+    </div>
+
+    <div id="statusAlert" class="alert @statusClass d-flex justify-content-between align-items-center">
+        <span>
+            <strong>Status:</strong> <span id="statusText">@Model.Status</span>
+            <span class="ms-3 text-muted small">ID: @Model.BuildId</span>
+        </span>
+        
+        <div id="artifactsArea">
+            @foreach(var artifact in Model.Artifacts)
+            {
+                <a href="@artifact.FilePath" class="btn btn-primary btn-sm">
+                    📥 Завантажити (@artifact.FilePath.Split('/').Last())
+                </a>
+            }
+        </div>
+    </div>
+
+    <h3>Console Output</h3>
+    <div id="consoleOutput" style="background-color: #1e1e1e; color: #d4d4d4; font-family: 'Consolas', monospace; padding: 15px; height: 500px; overflow-y: auto; border-radius: 5px; border: 1px solid #333;">
+        @foreach (var log in Model.Logs.OrderBy(l => l.Timestamp))
+        {
+            <div class="log-line">
+                <span style="color: #569cd6;">[@log.Timestamp.ToString("HH:mm:ss")]</span>
+                <span>@log.Content</span>
+            </div>
+        }
+    </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/7.0.5/signalr.min.js"></script>
+
+<script>
+    const buildId = "@Model.BuildId";
+    const statusText = document.getElementById("statusText");
+    const statusAlert = document.getElementById("statusAlert");
+    const consoleBox = document.getElementById("consoleOutput");
+
+    // Автоскрол вниз при завантаженні сторінки
+    consoleBox.scrollTop = consoleBox.scrollHeight;
+
+    // 1. Підключення до SignalR Hub
+    const connection = new signalR.HubConnectionBuilder()
+        .withUrl("/buildHub")
+        .build();
+
+    // 2. Прийом логів
+    connection.on("ReceiveLog", function (message, time) {
+        const div = document.createElement("div");
+        div.className = "log-line";
+        
+        // Розфарбовуємо Start/Success/Error для краси
+        let contentColor = "#d4d4d4"; // сірий (дефолт)
+        if (message.includes("[Success]")) contentColor = "#4ec9b0"; // зелений
+        if (message.includes("[Error]")) contentColor = "#f44747";   // червоний
+        if (message.includes("[Start]")) contentColor = "#c586c0";   // фіолетовий
+
+        div.innerHTML = `<span style="color: #569cd6;">[${time}]</span> <span style="color: ${contentColor};">${message}</span>`;
+        
+        consoleBox.appendChild(div);
+        consoleBox.scrollTop = consoleBox.scrollHeight; // Автоскрол
+    });
+
+    // 3. Прийом зміни статусу (коли білд завершився)
+    connection.on("BuildFinished", function (status) {
+        statusText.innerText = status;
+        
+        // Змінюємо колір плашки
+        statusAlert.classList.remove("alert-secondary", "alert-warning", "alert-success", "alert-danger");
+        if (status === "Success") statusAlert.classList.add("alert-success");
+        else statusAlert.classList.add("alert-danger");
+
+        // Перезавантажуємо сторінку через 1.5 сек, щоб з'явилась кнопка "Завантажити"
+        setTimeout(() => location.reload(), 1500);
+    });
+
+    // 4. Старт з'єднання
+    connection.start()
+        .then(() => {
+            console.log("SignalR Connected.");
+            connection.invoke("JoinBuildGroup", buildId);
+        })
+        .catch(err => console.error(err.toString()));
+</script>

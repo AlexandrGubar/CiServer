@@ -73,9 +73,15 @@ public class Build : IElement
     public void Accept(IVisitor visitor)
     {
         visitor.VisitBuild(this);
+        
         foreach (var log in Logs)
         {
             log.Accept(visitor);
+        }
+
+        foreach (var artifact in Artifacts)
+        {
+            artifact.Accept(visitor);
         }
     }
 }

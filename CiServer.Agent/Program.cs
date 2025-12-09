@@ -42,14 +42,17 @@ static async Task ExecutePipelineAsync(Build build, HttpClient client)
     var gitCmd = new CloneRepositoryCommand(build);
     var buildCmd = new CompileCodeCommand(build);
     var testCmd = new RunTestsCommand(build);
+    var artifactCmd = new ArchiveArtifactsCommand(build, client);
 
     var decoratedGit = new HttpReportDecorator(gitCmd, client, build.BuildId);
     var decoratedBuild = new HttpReportDecorator(buildCmd, client, build.BuildId);
     var decoratedTest = new HttpReportDecorator(testCmd, client, build.BuildId);
+    var decoratedArtifact = new HttpReportDecorator(artifactCmd, client, build.BuildId);
 
     pipeline.AddCommand(decoratedGit);
     pipeline.AddCommand(decoratedBuild);
     pipeline.AddCommand(decoratedTest);
+    pipeline.AddCommand(decoratedArtifact);
 
     bool success = true;
     try

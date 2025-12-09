@@ -7,7 +7,9 @@
 
     <div class="mb-4">
         <a asp-action="StartBuild" asp-route-id="@Model.ProjectId" class="btn btn-success btn-lg">🚀 Запустити Build</a>
+        
         <a asp-action="Index" class="btn btn-secondary">← Назад</a>
+        
         <a href="/Reports/Project/@Model.ProjectId" target="_blank" class="btn btn-info">📊 Відкрити повний HTML-звіт</a>
     </div>
 
@@ -24,6 +26,7 @@
         <tbody>
             @foreach (var build in Model.Builds.OrderByDescending(b => b.StartTime))
             {
+                // Визначаємо колір для бейджика статусу
                 string badgeClass = build.Status.ToString() switch
                 {
                     "Success" => "bg-success",
@@ -31,12 +34,15 @@
                     "Running" => "bg-warning text-dark",
                     _ => "bg-secondary"
                 };
+
                 <tr>
                     <td>@build.StartTime.ToLocalTime()</td>
                     <td><span class="badge @badgeClass">@build.Status</span></td>
                     <td>@(string.IsNullOrEmpty(build.CommitHash) ? "-" : build.CommitHash)</td>
                     <td>
-                        <a asp-action="BuildDetails" asp-route-id="@build.BuildId" class="btn btn-sm btn-outline-primary">Деталі</a>
+                        <a href="/Projects/BuildDetails/@build.BuildId" class="btn btn-sm btn-primary">
+                            👁️ Деталі
+                        </a>
                     </td>
                 </tr>
             }

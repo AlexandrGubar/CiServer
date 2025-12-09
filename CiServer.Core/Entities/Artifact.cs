@@ -1,5 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using CiServer.Core.Visitor;
 
 namespace CiServer.Core.Entities;
 
@@ -16,4 +17,8 @@ public class Artifact
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 
     public Build? Build { get; set; }
+    public void Accept(IVisitor visitor)
+    {
+        visitor.VisitArtifact(this);
+    }
 }

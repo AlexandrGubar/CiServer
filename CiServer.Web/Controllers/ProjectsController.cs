@@ -96,4 +96,16 @@ public class ProjectsController : Controller
         }
         return RedirectToAction(nameof(Index));
     }
+    public async Task<IActionResult> BuildDetails(Guid id)
+{
+    var build = await _context.Builds
+        .Include(b => b.Logs)
+        .Include(b => b.Artifacts)
+        .Include(b => b.Project)
+        .FirstOrDefaultAsync(b => b.BuildId == id);
+        
+    if (build == null) return NotFound();
+    
+    return View(build);
+}
 }

@@ -15,8 +15,11 @@ builder.Services.AddControllersWithViews()
     {
         options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
     });
+
+builder.Services.AddSignalR();
 builder.Services.AddScoped(typeof(IRepository<,>), typeof(RepositoryBase<,>));
 builder.Services.AddScoped<IMediator, CiMediator>();
+builder.Services.AddScoped<IRealTimeNotifier, CiServer.Web.Services.SignalRNotifier>();
 
 var app = builder.Build();
 
@@ -25,6 +28,7 @@ if (app.Environment.IsDevelopment())
     app.MapOpenApi();
 }
 
+app.UseStaticFiles();
 app.UseHttpsRedirection();
 app.UseAuthorization();
 
@@ -48,7 +52,7 @@ app.MapGet("/weatherforecast", () =>
     return forecast;
 })
 .WithName("GetWeatherForecast");
-
+app.MapHub<CiServer.Web.Hubs.BuildHub>("/buildHub");
 app.Run();
 
 record WeatherForecast(DateOnly Date, int TemperatureC, string? Summary)

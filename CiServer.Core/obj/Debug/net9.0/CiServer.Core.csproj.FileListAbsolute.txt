@@ -22,3 +22,4 @@ C:\КПІ\Ворк\Bogdan4ek\ТРПЗ\ci_server\CiServer.Core\obj\Debug\net9.0\C
 C:\КПІ\Ворк\Bogdan4ek\ТРПЗ\ci_server\CiServer.Core\obj\Debug\net9.0\refint\CiServer.Core.dll
 C:\КПІ\Ворк\Bogdan4ek\ТРПЗ\ci_server\CiServer.Core\obj\Debug\net9.0\CiServer.Core.pdb
 C:\КПІ\Ворк\Bogdan4ek\ТРПЗ\ci_server\CiServer.Core\obj\Debug\net9.0\ref\CiServer.Core.dll
+C:\КПІ\Ворк\Bogdan4ek\ТРПЗ\ci_server\CiServer.Core\obj\Debug\net9.0\CiServer.Core.csproj.AssemblyReference.cache

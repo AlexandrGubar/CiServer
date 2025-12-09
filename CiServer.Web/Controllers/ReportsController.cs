@@ -19,7 +19,9 @@ public class ReportsController : Controller
     {
         var project = await _context.Projects
             .Include(p => p.Builds)
-            .ThenInclude(b => b.Logs)
+                .ThenInclude(b => b.Logs)
+            .Include(p => p.Builds)
+                .ThenInclude(b => b.Artifacts)
             .FirstOrDefaultAsync(p => p.ProjectId == id);
 
         if (project == null) return NotFound("Проєкт не знайдено");
