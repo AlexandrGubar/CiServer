@@ -1,57 +1,159 @@
 @model CiServer.Core.Entities.Project
-@{ ViewData["Title"] = "Деталі проєкту"; }
+@{ 
+    ViewData["Title"] = "Деталі проєкту"; 
+    Layout = null; 
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>@Model.Name - CI Server</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+    
+    <style>
+        body { background-color: #f4f6f9; font-family: 'Segoe UI', sans-serif; padding-top: 30px; }
+        
+        .header-card {
+            background: white;
+            border: none;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+            margin-bottom: 30px;
+        }
+        
+        .status-badge {
+            font-size: 0.8rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            padding: 5px 10px;
+            border-radius: 6px;
+            letter-spacing: 0.5px;
+        }
+        .bg-success-subtle { background-color: #d1e7dd; color: #0f5132; }
+        .bg-danger-subtle { background-color: #f8d7da; color: #842029; }
+        .bg-warning-subtle { background-color: #fff3cd; color: #664d03; }
+        
+        .table-custom th {
+            text-transform: uppercase;
+            font-size: 0.75rem;
+            letter-spacing: 1px;
+            color: #6c757d;
+            border-bottom-width: 1px;
+        }
+        .table-custom td {
+            vertical-align: middle;
+            padding: 15px 10px;
+        }
+        
+        .btn-action {
+            width: 35px; height: 35px;
+            display: inline-flex;
+            align-items: center; justify-content: center;
+            border-radius: 8px;
+            transition: 0.2s;
+        }
+        .btn-action:hover { transform: translateY(-2px); }
+    </style>
+</head>
+<body>
 
 <div class="container">
-    <h1>@Model.Name</h1>
-    <p class="text-muted">Repo: <a href="@Model.RepoUrl" target="_blank">@Model.RepoUrl</a></p>
+    <div class="header-card p-4">
+        <div class="d-flex justify-content-between align-items-center flex-wrap gap-3">
+            <div>
+                <div class="d-flex align-items-center gap-3 mb-2">
+                    <div class="bg-primary bg-opacity-10 text-primary p-3 rounded-3">
+                        <i class="bi bi-box-seam display-6"></i>
+                    </div>
+                    <div>
+                        <h1 class="fw-bold mb-0">@Model.Name</h1>
+                        <span class="text-muted small">ID: @Model.ProjectId</span>
+                    </div>
+                </div>
+                <div class="d-flex align-items-center text-muted mt-2">
+                    <i class="bi bi-git me-2"></i> 
+                    <a href="@Model.RepoUrl" target="_blank" class="text-decoration-none font-monospace">@Model.RepoUrl</a>
+                </div>
+            </div>
 
-    <div class="mb-4">
-        <a asp-action="StartBuild" asp-route-id="@Model.ProjectId" class="btn btn-success btn-lg">🚀 Запустити Build</a>
-        
-        <a asp-action="Index" class="btn btn-secondary">← Назад</a>
-        
-        <a href="/Reports/Project/@Model.ProjectId" target="_blank" class="btn btn-info">📊 Відкрити повний HTML-звіт</a>
+            <div class="d-flex gap-2">
+                <a href="/Projects" class="btn btn-light border fw-bold text-muted">
+                    <i class="bi bi-arrow-left"></i> Назад
+                </a>
+                <a href="/Reports/Project/@Model.ProjectId" target="_blank" class="btn btn-outline-info fw-bold">
+                    <i class="bi bi-file-earmark-bar-graph"></i> Звіт
+                </a>
+                <a href="/Projects/StartBuild/@Model.ProjectId" class="btn btn-success btn-lg fw-bold shadow-sm">
+                    <i class="bi bi-play-fill"></i> Запустити Build
+                </a>
+            </div>
+        </div>
     </div>
 
-    <h3>Історія збірок</h3>
-    <table class="table table-hover">
-        <thead>
-            <tr>
-                <th>Дата</th>
-                <th>Статус</th>
-                <th>Commit</th>
-                <th>Дії</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var build in Model.Builds.OrderByDescending(b => b.StartTime))
-            {
-                // Визначаємо колір для бейджика статусу
-                string badgeClass = build.Status.ToString() switch
-                {
-                    "Success" => "bg-success",
-                    "Failed" => "bg-danger",
-                    "Running" => "bg-warning text-dark",
-                    _ => "bg-secondary"
-                };
+    <div class="card border-0 shadow-sm rounded-4 overflow-hidden">
+        <div class="card-header bg-white p-3 border-bottom">
+            <h5 class="mb-0 fw-bold"><i class="bi bi-clock-history text-secondary me-2"></i> Історія запусків</h5>
+        </div>
+        <div class="table-responsive">
+            <table class="table table-hover table-custom mb-0">
+                <thead class="bg-light">
+                    <tr>
+                        <th class="ps-4">Статус</th>
+                        <th>Build ID / Commit</th>
+                        <th>Час запуску</th>
+                        <th class="text-end pe-4">Дії</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var build in Model.Builds.OrderByDescending(b => b.StartTime))
+                    {
+                        string status = build.Status.ToString();
+                        string badgeClass = status switch {
+                            "Success" => "bg-success-subtle",
+                            "Failed" => "bg-danger-subtle",
+                            "Running" => "bg-warning-subtle",
+                            _ => "bg-light text-dark border"
+                        };
+                        string icon = status switch {
+                            "Success" => "bi-check-circle-fill",
+                            "Failed" => "bi-x-circle-fill",
+                            "Running" => "bi-hourglass-split",
+                            _ => "bi-circle"
+                        };
 
-                <tr>
-                    <td>@build.StartTime.ToLocalTime()</td>
-                    <td><span class="badge @badgeClass">@build.Status</span></td>
-                    <td>@(string.IsNullOrEmpty(build.CommitHash) ? "-" : build.CommitHash)</td>
-                    <td>
-                        <a href="/Projects/BuildDetails/@build.BuildId" class="btn btn-sm btn-primary">
-                            👁️ Деталі
-                        </a>
-                    </td>
-                </tr>
-            }
-        </tbody>
-    </table>
+                        <tr>
+                            <td class="ps-4">
+                                <span class="status-badge @badgeClass">
+                                    <i class="bi @icon me-1"></i> @status
+                                </span>
+                            </td>
+                            <td>
+                                <div class="font-monospace fw-bold text-dark">#@build.BuildId.ToString().Substring(0, 8)</div>
+                                <small class="text-muted"><i class="bi bi-code-branch"></i> @(string.IsNullOrEmpty(build.CommitHash) ? "HEAD" : build.CommitHash.Substring(0, 7))</small>
+                            </td>
+                            <td>
+                                <div class="text-dark">@build.StartTime.ToLocalTime().ToString("HH:mm")</div>
+                                <small class="text-muted">@build.StartTime.ToLocalTime().ToString("dd.MM.yyyy")</small>
+                            </td>
+                            <td class="text-end pe-4">
+                                <a href="/Projects/BuildDetails/@build.BuildId" class="btn btn-primary btn-sm px-3 rounded-pill fw-bold">
+                                    Деталі <i class="bi bi-chevron-right ms-1"></i>
+                                </a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
 </div>
 
 <script>
-    setTimeout(function() {
-        window.location.reload(1);
-    }, 30000);
+    // Автооновлення списку
+    setTimeout(() => window.location.reload(), 25000);
 </script>
+
+</body>
+</html>

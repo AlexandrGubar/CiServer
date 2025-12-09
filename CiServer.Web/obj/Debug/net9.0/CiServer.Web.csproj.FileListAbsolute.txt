@@ -154,3 +154,4 @@ C:\КПІ\Ворк\Bogdan4ek\ТРПЗ\ci_server\CiServer.Web\obj\Debug\net9.0\Ci
 C:\КПІ\Ворк\Bogdan4ek\ТРПЗ\ci_server\CiServer.Web\obj\Debug\net9.0\ref\CiServer.Web.dll
 C:\КПІ\Ворк\Bogdan4ek\ТРПЗ\ci_server\CiServer.Web\bin\Debug\net9.0\CiServer.Web.staticwebassets.runtime.json
 C:\КПІ\Ворк\Bogdan4ek\ТРПЗ\ci_server\CiServer.Web\bin\Debug\net9.0\Newtonsoft.Json.dll
+C:\КПІ\Ворк\Bogdan4ek\ТРПЗ\ci_server\CiServer.Web\obj\Debug\net9.0\compressed\b7h07jfhu5-q4co6yi1b7.gz

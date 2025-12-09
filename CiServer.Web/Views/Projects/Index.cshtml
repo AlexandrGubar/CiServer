@@ -1,35 +1,102 @@
 @model IEnumerable<CiServer.Core.Entities.Project>
-@{ ViewData["Title"] = "Всі проєкти"; }
+@{ 
+    ViewData["Title"] = "Мої проєкти"; 
+    Layout = null;
+}
 
-<h2>Список проєктів</h2>
-<a href="/Projects/Create" class="btn btn-primary mb-3">Додати новий проєкт</a>
-
-<table class="table table-bordered table-striped">
-    <thead>
-        <tr>
-            <th>Назва</th>
-            <th>Репозиторій</th>
-            <th>Дата створення</th>
-            <th style="width: 250px;">Дії</th> </tr>
-    </thead>
-    <tbody>
-        @foreach (var item in Model)
-        {
-            <tr>
-                <td>
-                    <a href="/Projects/Details/@item.ProjectId">@item.Name</a>
-                </td>
-                <td><a href="@item.RepoUrl" target="_blank">@item.RepoUrl</a></td>
-                <td>@item.CreatedAt.ToLocalTime()</td> <td>
-                    <div class="d-flex gap-2">
-                         <form action="/Projects/StartBuild/@item.ProjectId" method="get">
-                            <button type="submit" class="btn btn-warning btn-sm">🚀 Build</button>
-                        </form>
-                        
-                        <a href="/Projects/Delete/@item.ProjectId" class="btn btn-danger btn-sm">🗑 Видалити</a>
-                    </div>
-                </td>
-            </tr>
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Мої проєкти - CI Server</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+    
+    <style>
+        body { background-color: #f8f9fa; font-family: 'Segoe UI', sans-serif; padding: 20px; }
+        .project-card {
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            border: none;
+            background-color: white;
+            border-radius: 12px;
         }
-    </tbody>
-</table>
+        .project-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1) !important;
+        }
+        .icon-box {
+            width: 45px; height: 45px; 
+            display: flex; align-items: center; justify-content: center;
+            border-radius: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container py-4">
+        <div class="d-flex justify-content-between align-items-center mb-5 pb-3 border-bottom">
+            <div>
+                <h1 class="fw-bold text-dark mb-0"><i class="bi bi-cpu-fill text-primary"></i> CI Server</h1>
+            </div>
+            <a href="/Projects/Create" class="btn btn-primary shadow-sm px-4 rounded-pill">
+                <i class="bi bi-plus-lg"></i> Новий проєкт
+            </a>
+        </div>
+
+        @if (!Model.Any())
+        {
+            <div class="text-center py-5 bg-white rounded-3 shadow-sm">
+                <h3 class="text-dark">Список порожній</h3>
+                <a href="/Projects/Create" class="btn btn-outline-primary mt-3">Створити проєкт</a>
+            </div>
+        }
+        else
+        {
+            <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+                @foreach (var item in Model)
+                {
+                    <div class="col">
+                        <div class="card h-100 project-card shadow-sm p-2">
+                            <div class="card-body d-flex flex-column">
+                                <div class="d-flex justify-content-between align-items-start mb-3">
+                                    <div class="d-flex align-items-center gap-3">
+                                        <div class="icon-box bg-primary bg-opacity-10 text-primary">
+                                            <i class="bi bi-git fs-4"></i>
+                                        </div>
+                                        <div>
+                                            <h5 class="card-title fw-bold text-dark mb-0">@item.Name</h5>
+                                            <small class="text-muted" style="font-size: 0.75rem;">ID: @item.ProjectId.ToString().Substring(0,4)...</small>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="mb-4 flex-grow-1 p-2 bg-light rounded text-truncate">
+                                    <small class="text-uppercase text-muted fw-bold d-block" style="font-size: 0.65rem;">Git URL</small>
+                                    <a href="@item.RepoUrl" target="_blank" class="text-decoration-none font-monospace text-secondary" style="font-size: 0.9rem;">
+                                        @item.RepoUrl
+                                    </a>
+                                </div>
+
+                                <div class="d-flex justify-content-between align-items-center pt-2 border-top">
+                                    <span class="text-muted small">
+                                        <i class="bi bi-clock"></i> @item.CreatedAt.ToShortDateString()
+                                    </span>
+                                    
+                                    <div class="d-flex gap-2">
+                                        <a href="/Projects/Delete/@item.ProjectId" class="btn btn-sm btn-outline-danger rounded-pill" title="Видалити">
+                                            <i class="bi bi-trash"></i>
+                                        </a>
+                                        <a href="/Projects/Details/@item.ProjectId" class="btn btn-sm btn-primary rounded-pill px-3">
+                                            Відкрити <i class="bi bi-arrow-right ms-1"></i>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        }
+    </div>
+</body>
+</html>
