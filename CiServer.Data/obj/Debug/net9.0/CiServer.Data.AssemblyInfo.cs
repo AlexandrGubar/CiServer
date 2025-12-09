@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("CiServer.Data")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+04deeafe212315f50b1749ce0562f9d460c30e7b")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+422d3bcdf8f93cf5b5041abf9050fa7c807a5e49")]
 [assembly: System.Reflection.AssemblyProductAttribute("CiServer.Data")]
 [assembly: System.Reflection.AssemblyTitleAttribute("CiServer.Data")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
