@@ -2,16 +2,19 @@ using CiServer.Data;
 using CiServer.Core.Entities;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.IO;
 
 namespace CiServer.Web.Controllers;
 
 public class ProjectsController : Controller
 {
     private readonly ApplicationDbContext _context;
+    private readonly IWebHostEnvironment _env;
 
-    public ProjectsController(ApplicationDbContext context)
+    public ProjectsController(ApplicationDbContext context, IWebHostEnvironment env)
     {
         _context = context;
+        _env = env;
     }
 
     public async Task<IActionResult> Index()
@@ -61,7 +64,7 @@ public class ProjectsController : Controller
         };
         _context.Builds.Add(build);
         await _context.SaveChangesAsync();
-        return RedirectToAction(nameof(Index));
+        return RedirectToAction("BuildDetails", new { id = build.BuildId });
     }
 
     public async Task<IActionResult> Delete(Guid? id)
@@ -82,30 +85,42 @@ public class ProjectsController : Controller
     [HttpPost, ActionName("Delete")]
     public async Task<IActionResult> DeleteConfirmed(Guid projectId)
     {
-        Console.WriteLine($"[DEBUG DELETE] Отримано запит на видалення ID: {projectId}");
-        var project = await _context.Projects.FindAsync(projectId);
+        var project = await _context.Projects
+            .Include(p => p.Builds)
+            .FirstOrDefaultAsync(p => p.ProjectId == projectId);
         if (project != null)
         {
+            foreach (var build in project.Builds)
+            {
+                var buildArtifactsPath = Path.Combine(_env.WebRootPath, "artifacts", build.BuildId.ToString());
+                if (Directory.Exists(buildArtifactsPath))
+                {
+                    try
+                    {
+                        Directory.Delete(buildArtifactsPath, true);
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine($"[ERROR] Не вдалося видалити папку {buildArtifactsPath}: {ex.Message}");
+                    }
+                }
+            }
             _context.Projects.Remove(project);
             await _context.SaveChangesAsync();
-            Console.WriteLine("[DEBUG DELETE] Проєкт успішно видалено з БД");
-        }
-        else
-        {
-            Console.WriteLine("[DEBUG DELETE] Проєкт не знайдено в БД");
         }
         return RedirectToAction(nameof(Index));
     }
+
     public async Task<IActionResult> BuildDetails(Guid id)
-{
-    var build = await _context.Builds
-        .Include(b => b.Logs)
-        .Include(b => b.Artifacts)
-        .Include(b => b.Project)
-        .FirstOrDefaultAsync(b => b.BuildId == id);
-        
-    if (build == null) return NotFound();
-    
-    return View(build);
-}
+    {
+        var build = await _context.Builds
+            .Include(b => b.Logs)
+            .Include(b => b.Artifacts)
+            .Include(b => b.Project)
+            .FirstOrDefaultAsync(b => b.BuildId == id);
+
+        if (build == null) return NotFound();
+
+        return View(build);
+    }
 }
