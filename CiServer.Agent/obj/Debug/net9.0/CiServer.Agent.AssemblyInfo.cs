@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("CiServer.Agent")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+7b5c5957752606a42df47d6d4a36737280a6bb38")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+b8f1eb7a576a69d3a77d70992081061eacaa0a4c")]
 [assembly: System.Reflection.AssemblyProductAttribute("CiServer.Agent")]
 [assembly: System.Reflection.AssemblyTitleAttribute("CiServer.Agent")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
